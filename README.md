@@ -11,7 +11,7 @@ and why the model obeyed. No API keys. No live model calls. No backend.
 
 ## Run it
 
-**Hosted:** _(Vercel URL — added in the Distribution step)_
+**Hosted:** https://carrier-beta.vercel.app
 
 **Locally** (needs [Bun](https://bun.sh)):
 
