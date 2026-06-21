@@ -1,0 +1,54 @@
+---
+interface Props {
+  title: string;
+  subtitle?: string;
+}
+const { title, subtitle } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <style is:global>
+      :root {
+        --bg: #0e1116;
+        --panel: #161b22;
+        --ink: #e6edf3;
+        --muted: #8b949e;
+        --accent: #f0883e;
+        --line: #30363d;
+        font-family: ui-sans-serif, system-ui, -apple-system, sans-serif;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--ink);
+        line-height: 1.55;
+      }
+      main { max-width: 880px; margin: 0 auto; padding: 2.5rem 1.25rem 4rem; }
+      a { color: var(--accent); }
+      h1 { font-size: 1.9rem; margin: 0 0 0.25rem; }
+      .subtitle { color: var(--muted); margin: 0 0 2rem; }
+      .sandbox {
+        border: 1px solid var(--line);
+        border-left: 3px solid var(--accent);
+        background: var(--panel);
+        padding: 0.75rem 1rem;
+        border-radius: 6px;
+        color: var(--muted);
+        font-size: 0.9rem;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>{title}</h1>
+      {subtitle && <p class="subtitle">{subtitle}</p>}
+      <slot />
+    </main>
+  </body>
+</html>

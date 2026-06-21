@@ -1,0 +1,101 @@
+---
+import Base from "../../layouts/Base.astro";
+import Lab from "../../components/Lab.svelte";
+import {
+  listLabs,
+  getLabTechniques,
+  nextLab,
+  prevLab,
+  decodePayload,
+} from "../../lib/scenario";
+
+// One static page per lab, generated from the progression data (ISC-18).
+// Lab data is built from the engine at build time (deterministic, no runtime
+// fetch — ISC-21). client:load server-renders the island, so the no-JS path
+// still serves the rendered lesson (ISC-35).
+export function getStaticPaths() {
+  return listLabs().map((lab) => ({ params: { lab: lab.slug } }));
+}
+
+const { lab: slug } = Astro.params;
+const labs = listLabs();
+const lab = labs.find((l) => l.slug === slug)!;
+const next = nextLab(slug);
+const prev = prevLab(slug);
+
+const labData = getLabTechniques(slug).map((technique) => ({
+  technique,
+  decoded: decodePayload(technique),
+}));
+---
+
+<Base
+  title={`Lab ${slug} — ${lab.title}`}
+  subtitle="Pick an attack. Watch which block of the assembled prompt carried the bytes, and why the model obeyed."
+>
+  <p class="sandbox">
+    Every payload in this lab is illustrative and sandboxed. Nothing here is a
+    working exploit against a real system. It is a teaching tool.
+  </p>
+
+  <p class="blurb">{lab.blurb}</p>
+
+  <nav class="steps" aria-label="Lab progression">
+    {labs.map((l) => (
+      <a href={`/labs/${l.slug}`} class:list={["step", { current: l.slug === slug }]}>
+        {l.num}. {l.title}
+      </a>
+    ))}
+  </nav>
+
+  <Lab client:load {labData} />
+
+  <nav class="advance">
+    {prev ? (
+      <a href={`/labs/${prev.slug}`}>&larr; Lab {prev.slug}: {prev.title}</a>
+    ) : (
+      <a href="/">&larr; Home</a>
+    )}
+    {next ? (
+      <a href={`/labs/${next.slug}`} class="primary">Next — Lab {next.slug}: {next.title} &rarr;</a>
+    ) : (
+      <a href="/" class="primary">Finish &rarr;</a>
+    )}
+  </nav>
+</Base>
+
+<style>
+  .blurb {
+    color: var(--ink);
+    margin: 1rem 0 1.25rem;
+  }
+  .steps {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin: 0 0 1.5rem;
+  }
+  .step {
+    font-size: 0.82rem;
+    text-decoration: none;
+    color: var(--muted);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 0.25rem 0.7rem;
+  }
+  .step.current {
+    color: var(--ink);
+    border-color: var(--accent);
+  }
+  .advance {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 2.5rem;
+    border-top: 1px solid var(--line);
+    padding-top: 1.25rem;
+  }
+  .advance .primary {
+    font-weight: 600;
+  }
+</style>

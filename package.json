@@ -1,0 +1,19 @@
+{
+  "name": "carrier",
+  "type": "module",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Carrier — a deterministic, static browser lab that teaches where prompt injection rides.",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check",
+    "test": "bun test"
+  },
+  "dependencies": {
+    "astro": "^5.0.0",
+    "@astrojs/svelte": "^7.0.0",
+    "svelte": "^5.0.0"
+  }
+}

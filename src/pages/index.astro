@@ -1,0 +1,58 @@
+---
+import Base from "../layouts/Base.astro";
+import { listLabs, getLabTechniques } from "../lib/scenario";
+
+const labs = listLabs();
+---
+
+<Base
+  title="Carrier"
+  subtitle="See where prompt injection rides. Pick an attack, fire it, watch which block carried the bytes."
+>
+  <p class="sandbox">
+    Every payload in this lab is illustrative and sandboxed. Nothing here is a
+    working exploit against a real system. It is a teaching tool.
+  </p>
+
+  <h2>Start</h2>
+  <p>
+    <a href="/labs/01">Lab 01 — {labs[0].title} &rarr;</a>
+  </p>
+
+  <h2>The progression</h2>
+  <ol class="labs">
+    {labs.map((lab) => (
+      <li>
+        <a href={`/labs/${lab.slug}`}><strong>Lab {lab.slug} — {lab.title}</strong></a>
+        <p class="blurb">{lab.blurb}</p>
+        <p class="techs">
+          {getLabTechniques(lab.slug).map((t) => t.label).join(" · ")}
+        </p>
+      </li>
+    ))}
+  </ol>
+
+  <h2>Read the source</h2>
+  <p style="color:var(--muted)">
+    The pedagogy includes reading the code. The attack library is
+    <code>src/data/techniques.ts</code>; the deterministic engine is
+    <code>src/lib/scenario.ts</code>. Same input, same lesson, every run.
+  </p>
+</Base>
+
+<style>
+  .labs {
+    display: grid;
+    gap: 1.25rem;
+    padding-left: 1.1rem;
+  }
+  .labs .blurb {
+    color: var(--ink);
+    margin: 0.35rem 0 0.35rem;
+  }
+  .labs .techs {
+    color: var(--muted);
+    font-size: 0.85rem;
+    margin: 0;
+  }
+</style>
